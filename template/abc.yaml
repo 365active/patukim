@@ -1,0 +1,233 @@
+mixed-port: 7890
+allow-lan: true
+mode: rule
+log-level: info
+ipv6: true
+dns:
+  enable: true
+  listen: :53
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  default-nameserver: 
+    - 223.5.5.5
+    - 114.114.114.114
+    - 8.8.8.8
+  nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+  fallback:
+    - https://1.0.0.1/dns-query
+    - tls://dns.google
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    ipcidr:
+      - 240.0.0.0/4
+
+proxies:
+  - name: "hys2"
+    type: hysteria2
+    server: 1.2.3.4
+    port: 12345
+    udp: true
+    up: 49 Mbps
+    down: 220 Mbps
+    password: 123
+    obfs: salamander
+    obfs-password: 123
+    sni: bing.com
+    skip-cert-verify: true
+
+proxy-groups:
+  - name: "PROXY"
+    type: select
+    proxies:
+     - hys2
+
+rule-providers:
+  cn:
+    type: http
+    behavior: domain
+    url: "https://mirror.ghproxy.com/https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/cn_domain.yaml"
+    path: ./ruleset/cn_domain.yaml
+    interval: 86400
+
+  reject:
+    type: http
+    behavior: domain
+    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  applications:
+    type: http
+    behavior: classical
+    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/applications.txt"
+    path: ./ruleset/applications.yaml
+    interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  apple-cn:
+    type: http
+    behavior: domain
+    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/apple-cn.txt"
+    path: ./ruleset/apple-cn.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://mirror.ghproxy.com/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+
+  spotify:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Spotify/Spotify.yaml"
+    path: ./ruleset/spotify.yaml
+    interval: 86400
+
+  onedrive:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OneDrive/OneDrive.yaml"
+    path: ./ruleset/OneDrive.yaml
+    interval: 86400
+
+  openai:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OpenAI/OpenAI.yaml"
+    path: ./ruleset/OpenAI.yaml
+    interval: 86400
+
+  microsoft:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Microsoft/Microsoft.yaml"
+    path: ./ruleset/Microsoft.yaml
+    interval: 86400
+
+  youtube:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/YouTube/YouTube.yaml"
+    path: ./ruleset/YouTube.yaml
+    interval: 86400
+
+  twitter:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Twitter/Twitter.yaml"
+    path: ./ruleset/Twitter.yaml
+    interval: 86400
+
+  pixiv:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Pixiv/Pixiv.yaml"
+    path: ./ruleset/Pixiv.yaml
+    interval: 86400
+
+rules:
+  # - RULE-SET,MyDirect,DIRECT
+  # - RULE-SET,MyPROXY,PROXY
+
+  - RULE-SET,cn,DIRECT
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,private,DIRECT
+  - GEOSITE,youtube,PROXY
+  - GEOSITE,google,PROXY
+  - GEOSITE,twitter,PROXY
+  - GEOSITE,pixiv,PROXY
+  - GEOSITE,category-scholar-!cn,PROXY
+  - GEOSITE,biliintl,PROXY
+  - GEOSITE,onedrive,DIRECT
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,category-games@cn,DIRECT
+  - GEOSITE,geolocation-!cn,PROXY
+  - GEOSITE,cn,DIRECT
+
+  #GEOIP规则
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,telegram,PROXY
+  - GEOIP,JP,PROXY
+  - GEOIP,CN,DIRECT
+  # - DST-PORT,80/8080/443/8443,PROXY
+  - MATCH,DIRECT
+
+prepend-rules:
+  # - RULE-SET,reject,REJECT
+  # -------------代理--------------------
+  - DOMAIN-SUFFIX,v2rayssr.com,PROXY
+  - DOMAIN-SUFFIX,vpsxb.net,PROXY
+  - DOMAIN-SUFFIX,yugogo.xyz,PROXY
+  - DOMAIN-SUFFIX,boyfriendtv3.com,PROXY
+  - DOMAIN-SUFFIX,ahcdn.com,PROXY
+  - DOMAIN-SUFFIX,ahvcdn.com,PROXY
+  # -------------直连--------------------
+  - RULE-SET,applications,DIRECT
+  - DOMAIN-SUFFIX,virustotal.com,DIRECT
+  - DOMAIN-SUFFIX,jsdelivr.net,DIRECT
+  - DOMAIN,ghproxy.com,DIRECT
+  - DOMAIN-KEYWORD,mzstatic.com,DIRECT
+  # - DOMAIN-SUFFIX,packagecontrol.io,DIRECT
+  - DOMAIN-SUFFIX,outlook.com,DIRECT
+  - DOMAIN-SUFFIX,bing.com,DIRECT
+  - DOMAIN-SUFFIX,cn.mm.bing.net,DIRECT
+  # - DOMAIN-SUFFIX,miscrosoft.com,DIRECT
+  # - DOMAIN-KEYWORD,miscrosoft.com,DIRECT
+  - DOMAIN-SUFFIX,mail.io,DIRECT
+  - DOMAIN-SUFFIX,baidu.com,DIRECT
+  - DOMAIN-SUFFIX,justjaredjr.com,DIRECT
+  - DOMAIN-SUFFIX,justjared.com,DIRECT
+  - DOMAIN-SUFFIX,yunduanxin.net,DIRECT
+  - DOMAIN-SUFFIX,ngosang.github.io,DIRECT
+  - DOMAIN-SUFFIX,douban.com,DIRECT
+  - DOMAIN-SUFFIX,lncn.org,DIRECT
+  - DOMAIN-SUFFIX,cloudflare.com,DIRECT
+  - DOMAIN-SUFFIX,ddys.pro,DIRECT
+  - DOMAIN-SUFFIX,vocalremover.org,DIRECT
+  - DOMAIN-SUFFIX,hm.com.cn,DIRECT
+  - DOMAIN-SUFFIX,gap.com,DIRECT
+  - DOMAIN-SUFFIX,nodeseek.com,DIRECT
+  - DOMAIN-SUFFIX,gitlab.com,DIRECT
+  - DOMAIN-SUFFIX,hostloc.com,DIRECT
+  - DOMAIN-SUFFIX,racknerd.com,DIRECT
+  - DOMAIN-SUFFIX,mozilla.org,DIRECT
+  - DOMAIN-SUFFIX,gitlab.com,DIRECT
+  - DOMAIN-SUFFIX,jd.hk,DIRECT
+  - DOMAIN-SUFFIX,tmall.hk,DIRECT
+  # -------------win--------------------
+  - PROCESS-NAME,sublime,DIRECT
+  - PROCESS-NAME,sublime_text.exe,DIRECT
+  - PROCESS-NAME,qbittorrent.exe,DIRECT
+  - PROCESS-NAME,utorrent.exe,DIRECT
+  - PROCESS-NAME,CCleaner64.exe,REJECT
+  - PROCESS-NAME,emule.exe,DIRECT
+  # -------------mac--------------------
+  - PROCESS-NAME,com.naotanhaocan.BetterMouse,REJECT
+  - PROCESS-NAME,at.obdev.littlesnitch.agent,REJECT
+  - PROCESS-NAME,com.fatcatsoftware.pledpro,REJECT
+  - PROCESS-NAME,cn.better365.iBar,REJECT
+  - PROCESS-NAME,org.mozilla.thunderbird,DIRECT
+
+prepend-proxies:
+
+prepend-proxy-groups:
+
+append-rules:
+
+append-proxies:
+
+append-proxy-groups:
