@@ -92,6 +92,27 @@ rule-providers: #!replace
     path: ./ruleset/applications.yaml
     interval: 86400
 
+  netflix:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/Netflix/Netflix.yaml"
+    path: ./ruleset/Netflix.yaml
+    interval: 86400
+
+  netflix-ip:
+    type: http
+    behavior: ipcidr
+    url: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix_IP.txt"
+    path: ./ruleset/Netflix_IP.yaml
+    interval: 86400
+
+  openai:
+    type: http
+    behavior: classical
+    url: "https://cdn.jsdelivr.net/gh/blackmatrix7/ios_rule_script@master/rule/Clash/OpenAI/OpenAI.yaml"
+    path: ./ruleset/OpenAI.yaml
+    interval: 86400
+
 rules: #!replace
   - RULE-SET,applications,DIRECT
   - DOMAIN,clash.razord.top,DIRECT
@@ -103,32 +124,12 @@ rules: #!replace
   - RULE-SET,telegramcidr,PROXY
   - MATCH,DIRECT
 
-  - GEOSITE,category-ads-all,REJECT
-  - GEOSITE,private,DIRECT
-  - GEOSITE,youtube,PROXY
-  - GEOSITE,google,PROXY
-  - GEOSITE,twitter,PROXY
-  - GEOSITE,pixiv,PROXY
-  - GEOSITE,category-scholar-!cn,PROXY
-  - GEOSITE,biliintl,PROXY
-  - GEOSITE,onedrive,DIRECT
-  - GEOSITE,microsoft@cn,DIRECT
-  - GEOSITE,apple-cn,DIRECT
-  - GEOSITE,steam@cn,DIRECT
-  - GEOSITE,category-games@cn,DIRECT
-  - GEOSITE,geolocation-!cn,PROXY
-  - GEOSITE,cn,DIRECT
-
-  - GEOIP,private,DIRECT,no-resolve
-  - GEOIP,telegram,PROXY
-  - GEOIP,JP,PROXY
-  - GEOIP,CN,DIRECT
-  # - DST-PORT,80/8080/443/8443,PROXY
-  - MATCH,DIRECT
-
 prepend-rules: #!replace
   # - RULE-SET,MyDirect,DIRECT
   # - RULE-SET,MyPROXY,PROXY
+  - RULE-SET,netflix,PROXY
+  - RULE-SET,netflix-ip,PROXY
+  - RULE-SET,openai,PROXY
   # -------------代理--------------------
   - DOMAIN-SUFFIX,v2rayssr.com,PROXY
   - DOMAIN-SUFFIX,vpsxb.net,PROXY
