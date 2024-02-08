@@ -103,6 +103,29 @@ rules: #!replace
   - RULE-SET,telegramcidr,PROXY
   - MATCH,DIRECT
 
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,private,DIRECT
+  - GEOSITE,youtube,PROXY
+  - GEOSITE,google,PROXY
+  - GEOSITE,twitter,PROXY
+  - GEOSITE,pixiv,PROXY
+  - GEOSITE,category-scholar-!cn,PROXY
+  - GEOSITE,biliintl,PROXY
+  - GEOSITE,onedrive,DIRECT
+  - GEOSITE,microsoft@cn,DIRECT
+  - GEOSITE,apple-cn,DIRECT
+  - GEOSITE,steam@cn,DIRECT
+  - GEOSITE,category-games@cn,DIRECT
+  - GEOSITE,geolocation-!cn,PROXY
+  - GEOSITE,cn,DIRECT
+
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,telegram,PROXY
+  - GEOIP,JP,PROXY
+  - GEOIP,CN,DIRECT
+  # - DST-PORT,80/8080/443/8443,PROXY
+  - MATCH,DIRECT
+
 prepend-rules: #!replace
   # - RULE-SET,MyDirect,DIRECT
   # - RULE-SET,MyPROXY,PROXY
